@@ -19,6 +19,8 @@ let started = false; //처음은 게임이 실행이 안 된 상태기 때문
 let score = 0;
 let timer = undefined;
 
+field.addEventListener("click", onFieldClick);
+
 gameBtn.addEventListener("click", () => {
   if (started) {
     stopGame();
@@ -56,6 +58,7 @@ function startGameTimer() {
   timer = setInterval(() => {
     if (remainingTimeSec <= 0) {
       clearInterval(timer);
+      finishGame(CARROT_COUNT === score);
       return;
     }
     updateTimeText(--remainingTimeSec);
@@ -93,6 +96,32 @@ function initGame() {
   addItem("bug", 5, "img/bug.png");
 }
 
+function onFieldClick(event) {
+  if (!started) {
+    return;
+  }
+  const target = event.target;
+  if (target.matches(".carrot")) {
+    target.remove();
+    score++;
+    updateScoreBoard();
+    if (score === CARROT_COUNT) {
+      finishGame(true);
+    }
+  } else if (target.matches(".bug")) {
+    stopGameTimer();
+    finishGame(false);
+  }
+}
+
+function finishGame(win) {
+  started = false;
+  showPopUpWithText(win ? "YOU WON :) " : "YOU LOST :( ");
+}
+
+function updateScoreBoard() {
+  gameScore.innerText = CARROT_COUNT - score;
+}
 // 벌레와 토끼 img를 game field에 추가
 function addItem(className, count, imgPath) {
   const x1 = 0;
