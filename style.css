@@ -99,4 +99,5 @@ button {
 .pop-up__message {
   display: block;
   font-size: 38px;
+  margin-top: 10px;
 }
