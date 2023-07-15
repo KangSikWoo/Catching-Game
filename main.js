@@ -27,10 +27,16 @@ gameBtn.addEventListener("click", () => {
   } else {
     startGame();
   }
-  started = !started;
+});
+
+popUpRefresh.addEventListener("click", () => {
+  startGame();
+  hidePopUp();
+  showGameButton();
 });
 
 function startGame() {
+  started = true;
   initGame();
   showStopButton();
   showTimerAndScore();
@@ -38,13 +44,19 @@ function startGame() {
 }
 
 function stopGame() {
+  started = false;
   stopGameTimer();
+  hideGameButton();
+  showPopUpWithText("Replay❓");
+}
+
+function finishGame(win) {
+  started = false;
+  showPopUpWithText(win ? "YOU WON :) " : "YOU LOST :( ");
 }
 
 function stopGameTimer() {
   clearInterval(timer);
-  hideGameButton();
-  showPopUpWithText("Replay?");
 }
 
 function showTimerAndScore() {
@@ -76,14 +88,22 @@ function showPopUpWithText(text) {
   popUp.classList.remove("pop-up--hide");
 }
 
+function hidePopUp() {
+  popUp.classList.add("pop-up--hide");
+}
+
 function showStopButton() {
-  const icon = gameBtn.querySelector(".fa-play");
+  const icon = gameBtn.querySelector(".fa-solid");
   icon.classList.add("fa-stop");
   icon.classList.remove("fa-play");
 }
 
 function hideGameButton() {
   gameBtn.style.visibility = "hidden";
+}
+
+function showGameButton() {
+  gameBtn.style.visibility = "visible";
 }
 
 // 게임이 작동되는 함수
@@ -112,11 +132,6 @@ function onFieldClick(event) {
     stopGameTimer();
     finishGame(false);
   }
-}
-
-function finishGame(win) {
-  started = false;
-  showPopUpWithText(win ? "YOU WON :) " : "YOU LOST :( ");
 }
 
 function updateScoreBoard() {
