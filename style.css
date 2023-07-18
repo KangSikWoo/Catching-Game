@@ -1,6 +1,7 @@
 /* Universal */
 body {
   text-align: center;
+  background-color: black;
 }
 
 button {
@@ -17,6 +18,7 @@ button {
   background: url(img/background.png) center/cover;
   width: 800px;
   height: 500px;
+  border-radius: 20px;
 }
 
 .game__header {
@@ -48,6 +50,8 @@ button {
   border: 5px solid black;
   border-radius: 40px;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 
 .game__score {
@@ -61,6 +65,8 @@ button {
   border-radius: 50%;
   color: white;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 
 .game__field {
@@ -100,4 +106,9 @@ button {
   display: block;
   font-size: 38px;
   margin-top: 10px;
+}
+
+.carrot:hover,
+.bug:hover {
+  transform: scale(1.1);
 }
