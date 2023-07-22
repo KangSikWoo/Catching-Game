@@ -5,7 +5,6 @@ export default class PopUp {
     this.popUpText = document.querySelector(".pop-up__message");
     this.popUp = document.querySelector(".pop-up");
     this.popUpRefresh = document.querySelector(".pop-up__refresh");
-    this.gameBtn = document.querySelector(".game__button");
 
     this.popUpRefresh.addEventListener("click", () => {
       this.onclick && this.onclick();
@@ -20,7 +19,6 @@ export default class PopUp {
   showWithText(text) {
     this.popUpText.innerText = text;
     this.popUp.classList.remove("pop-up--hide");
-    this.gameBtn.style.visibility = "hidden";
   }
 
   hide() {
