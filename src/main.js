@@ -1,5 +1,7 @@
 "use strict";
 
+import PopUp from "./popup.js";
+
 const CARROT_SIZE = 80;
 const CARROT_COUNT = 5;
 const BUG_COUNT = 5;
@@ -11,10 +13,6 @@ const gameBtn = document.querySelector(".game__button");
 const gameTimer = document.querySelector(".game__timer");
 const gameScore = document.querySelector(".game__score");
 
-const popUp = document.querySelector(".pop-up");
-const popUpText = document.querySelector(".pop-up__message");
-const popUpRefresh = document.querySelector(".pop-up__refresh");
-
 const carrotSound = new Audio("./sound/carrot_pull.mp3");
 const bugSound = new Audio("./sound/bug_pull.mp3");
 const alertSound = new Audio("./sound/alert.wav");
@@ -25,6 +23,12 @@ let started = false; //처음은 게임이 실행이 안 된 상태기 때문
 let score = 0;
 let timer = undefined;
 
+const gameFinishBanner = new PopUp();
+
+gameFinishBanner.setClcikListener(() => {
+  startGame();
+});
+
 field.addEventListener("click", onFieldClick);
 
 gameBtn.addEventListener("click", () => {
@@ -33,12 +37,6 @@ gameBtn.addEventListener("click", () => {
   } else {
     startGame();
   }
-});
-
-popUpRefresh.addEventListener("click", () => {
-  startGame();
-  hidePopUp();
-  showGameButton();
 });
 
 function startGame() {
@@ -54,7 +52,7 @@ function stopGame() {
   started = false;
   stopGameTimer();
   hideGameButton();
-  showPopUpWithText("Replay❓");
+  gameFinishBanner.showWithText("Replay❓");
   stopSound(bgSound);
   playSound(alertSound);
 }
@@ -68,7 +66,7 @@ function finishGame(win) {
     playSound(bugSound);
   }
   stopGameTimer();
-  showPopUpWithText(win ? "YOU WON :) " : "YOU LOST :( ");
+  gameFinishBanner.showWithText(win ? "YOU WON :) " : "YOU LOST :( ");
 }
 
 function stopGameTimer() {
@@ -97,16 +95,6 @@ function updateTimeText(time) {
   const minute = Math.floor(time / 60);
   const second = time % 60;
   gameTimer.innerText = `${minute}:${second}`;
-}
-
-function showPopUpWithText(text) {
-  popUpText.innerText = text;
-  popUp.classList.remove("pop-up--hide");
-  gameBtn.style.visibility = "hidden";
-}
-
-function hidePopUp() {
-  popUp.classList.add("pop-up--hide");
 }
 
 function showStopButton() {
