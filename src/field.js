@@ -42,7 +42,7 @@ export default class Field {
     }
   }
 
-  onclick(event) {
+  onclick = (event) => {
     const target = event.target;
     if (target.matches(".carrot")) {
       target.remove();
@@ -52,7 +52,7 @@ export default class Field {
       sound.PlayBug();
       this.onItemClick && this.onItemClick("bug");
     }
-  }
+  };
 }
 
 //벌레와 토끼가 화면에 랜덤하게 나타날 수 있게 함.
