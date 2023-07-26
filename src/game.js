@@ -1,0 +1,133 @@
+"use strict";
+
+import Field from "./field.js";
+import * as sound from "./sound.js";
+
+export default class Game {
+  constructor(gameDuration, carrotCount, bugCount) {
+    this.gameDuration = gameDuration;
+    this.carrotCount = carrotCount;
+    this.bugCount = bugCount;
+
+    this.gameTimer = document.querySelector(".game__timer");
+    this.gameScore = document.querySelector(".game__score");
+    this.gameBtn = document.querySelector(".game__button");
+    this.gameBtn.addEventListener("click", () => {
+      if (this.started) {
+        this.stop();
+      } else {
+        this.start();
+      }
+    });
+
+    this.gameField = new Field(carrotCount, bugCount);
+    this.gameField.setClickListener(this.onItemClick);
+
+    this.started = false; //처음은 게임이 실행이 안 된 상태기 때문
+    this.score = 0;
+    this.timer = undefined;
+  }
+
+  setGameStopListner(onGameStop) {
+    this.onGameStop = onGameStop;
+  }
+
+  start() {
+    this.started = true;
+    sound.PlayBackground();
+    this.initGame();
+    this.showStopButton();
+    this.showTimerAndScore();
+    this.startGameTimer();
+  }
+
+  stop() {
+    this.started = false;
+    this.stopGameTimer();
+    this.hideGameButton();
+    sound.StopBackground();
+    sound.PlayAlert();
+    this.onGameStop && this.onGameStop("cancel");
+  }
+
+  finish(win) {
+    this.started = false;
+    sound.StopBackground();
+    if (win) {
+      sound.PlayWin();
+    } else {
+      sound.PlayBug();
+    }
+    this.stopGameTimer();
+    this.onGameStop && this.onGameStop(win ? "win" : "lose");
+  }
+
+  onItemClick = (item) => {
+    if (!this.started) {
+      return;
+    }
+    if (item === "carrot") {
+      this.score++;
+      this.updateScoreBoard();
+      if (this.score === this.carrotCount) {
+        this.finish(true);
+      }
+    } else if (item === "bug") {
+      this.finish(false);
+    }
+  };
+
+  stopGameTimer() {
+    clearInterval(this.timer);
+  }
+
+  showTimerAndScore() {
+    this.gameTimer.style.visibility = "visible";
+    this.gameScore.style.visibility = "visible";
+  }
+
+  startGameTimer() {
+    let remainingTimeSec = this.gameDuration;
+    this.updateTimeText(remainingTimeSec);
+    this.timer = setInterval(() => {
+      if (remainingTimeSec <= 0) {
+        clearInterval(this.timer);
+        this.finish(this.carrotCount === this.score);
+        return;
+      }
+      this.updateTimeText(--remainingTimeSec);
+    }, 1000);
+  }
+
+  updateTimeText(time) {
+    const minute = Math.floor(time / 60);
+    const second = time % 60;
+    this.gameTimer.innerText = `${minute}:${second}`;
+  }
+
+  showStopButton() {
+    const icon = this.gameBtn.querySelector(".fa-solid");
+    icon.classList.add("fa-stop");
+    icon.classList.remove("fa-play");
+    this.gameBtn.style.visibility = "visible";
+  }
+
+  hideGameButton() {
+    this.gameBtn.style.visibility = "hidden";
+  }
+
+  showGameButton() {
+    this.gameBtn.style.visibility = "visible";
+  }
+
+  updateScoreBoard() {
+    this.gameScore.innerText = this.carrotCount - this.score;
+  }
+
+  // 게임 초기화
+  initGame() {
+    this.score = 0;
+    this.gameScore.innerText = this.carrotCount;
+    this.gameField.init();
+  }
+}
