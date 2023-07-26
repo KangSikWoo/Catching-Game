@@ -21,12 +21,15 @@ game.setGameStopListner((reason) => {
   switch (reason) {
     case Reason.cancel:
       message = "Replay❓";
+      sound.PlayAlert();
       break;
     case Reason.win:
       message = "YOU WON :) ";
+      sound.PlayCarrot();
       break;
     case Reason.lose:
       message = "YOU LOST :( ";
+      sound.PlayBug();
       break;
     default:
       throw new Error("not valid reason");

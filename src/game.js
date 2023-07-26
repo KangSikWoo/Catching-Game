@@ -1,6 +1,6 @@
 "use strict";
 
-import Field from "./field.js";
+import { Field, Item } from "./field.js";
 import * as sound from "./sound.js";
 
 // 타입 보장
@@ -86,7 +86,7 @@ class Game {
     if (!this.started) {
       return;
     }
-    if (item === "carrot") {
+    if (item === Item.carrot) {
       this.score++;
       this.updateScoreBoard();
       if (this.score === this.carrotCount) {
