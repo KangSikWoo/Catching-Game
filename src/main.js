@@ -1,17 +1,19 @@
 "use strict";
 
 import PopUp from "./popup.js";
-import Game from "./game.js";
-
-const CARROT_COUNT = 5;
-const BUG_COUNT = 5;
-const GAME_DURATION_SEC = 5;
+import GameBuilder from "./game.js";
 
 const gameFinishBanner = new PopUp();
 
-const game = new Game(20, 20, 20);
+// 이렇게 작성하는 것이 더 한 눈에 들어오고 이해하기도 쉬움.
+const game = new GameBuilder()
+  .gameDuration(20)
+  .carrotCount(20)
+  .bugCount(20)
+  .build();
+
 // 게임이 왜 멈췄는지를 알려줌. game.js의 onGameStop이 실행됨.
-// pop up 배너를 띄우기 위함.
+// 상황에 맞게 pop up 배너를 띄우기 위함.
 game.setGameStopListner((reason) => {
   console.log(reason);
   let message;

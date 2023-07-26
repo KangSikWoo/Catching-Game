@@ -3,7 +3,33 @@
 import Field from "./field.js";
 import * as sound from "./sound.js";
 
-export default class Game {
+// 외부에서 건들이면 안되는 생성자들을 이용하는 방법
+export default class GameBuilder {
+  gameDuration(duration) {
+    this.gameDuration = duration;
+    // duration 반환
+    return this;
+  }
+
+  carrotCount(num) {
+    this.carrotCount = num;
+    return this;
+  }
+
+  bugCount(num) {
+    this.bugCount = num;
+    return this;
+  }
+
+  build() {
+    return new Game(
+      this.gameDuration, //
+      this.carrotCount,
+      this.bugCount
+    );
+  }
+}
+class Game {
   constructor(gameDuration, carrotCount, bugCount) {
     this.gameDuration = gameDuration;
     this.carrotCount = carrotCount;
@@ -53,6 +79,7 @@ export default class Game {
   finish(win) {
     this.started = false;
     sound.StopBackground();
+    this.gameBtn.style.visibility = "hidden";
     if (win) {
       sound.PlayWin();
     } else {
