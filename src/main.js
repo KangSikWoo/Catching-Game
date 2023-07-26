@@ -1,7 +1,7 @@
 "use strict";
 
 import PopUp from "./popup.js";
-import GameBuilder from "./game.js";
+import { GameBuilder, Reason } from "./game.js";
 
 const gameFinishBanner = new PopUp();
 
@@ -18,13 +18,13 @@ game.setGameStopListner((reason) => {
   console.log(reason);
   let message;
   switch (reason) {
-    case "cancel":
+    case Reason.cancel:
       message = "Replay❓";
       break;
-    case "win":
+    case Reason.win:
       message = "YOU WON :) ";
       break;
-    case "lose":
+    case Reason.lose:
       message = "YOU LOST :( ";
       break;
     default:
@@ -33,6 +33,7 @@ game.setGameStopListner((reason) => {
   gameFinishBanner.showWithText(message);
 });
 
+// 배너를 클릭하면 재시작
 gameFinishBanner.setClcikListener(() => {
   game.start();
 });

@@ -3,8 +3,15 @@
 import Field from "./field.js";
 import * as sound from "./sound.js";
 
+// 타입 보장
+export const Reason = Object.freeze({
+  win: "win",
+  lose: "lose",
+  cancel: "cancel",
+});
+
 // 외부에서 건들이면 안되는 생성자들을 이용하는 방법
-export default class GameBuilder {
+export class GameBuilder {
   gameDuration(duration) {
     this.gameDuration = duration;
     // duration 반환
@@ -73,7 +80,7 @@ class Game {
     this.hideGameButton();
     sound.StopBackground();
     sound.PlayAlert();
-    this.onGameStop && this.onGameStop("cancel");
+    this.onGameStop && this.onGameStop(Reason.cancel);
   }
 
   finish(win) {
@@ -86,7 +93,7 @@ class Game {
       sound.PlayBug();
     }
     this.stopGameTimer();
-    this.onGameStop && this.onGameStop(win ? "win" : "lose");
+    this.onGameStop && this.onGameStop(win ? Reason.win : Reason.lose);
   }
 
   onItemClick = (item) => {
