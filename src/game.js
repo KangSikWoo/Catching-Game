@@ -8,6 +8,7 @@ export const Reason = Object.freeze({
   win: "win",
   lose: "lose",
   cancel: "cancel",
+  clear: "clear",
 });
 
 // 외부에서 건들이면 안되는 생성자들을 이용하는 방법
@@ -36,22 +37,12 @@ export class GameBuilder {
     );
   }
 }
+
 class Game {
   constructor(gameDuration, carrotCount, bugCount) {
     this.gameDuration = gameDuration;
     this.carrotCount = carrotCount;
     this.bugCount = bugCount;
-
-    this.gameTimer = document.querySelector(".game__timer");
-    this.gameScore = document.querySelector(".game__score");
-    this.gameBtn = document.querySelector(".game__button");
-    this.gameBtn.addEventListener("click", () => {
-      if (this.started) {
-        this.stop(Reason.cancel);
-      } else {
-        this.start();
-      }
-    });
 
     this.gameField = new Field(carrotCount, bugCount);
     this.gameField.setClickListener(this.onItemClick);
@@ -59,6 +50,21 @@ class Game {
     this.started = false; //처음은 게임이 실행이 안 된 상태기 때문
     this.score = 0;
     this.timer = undefined;
+    this.gameLevel = 0;
+    this.state = "";
+
+    this.gameTimer = document.querySelector(".game__timer");
+    this.gameScore = document.querySelector(".game__score");
+    this.gameBtn = document.querySelector(".game__button");
+    this.gameBtn.addEventListener("click", () => {
+      if (this.started) {
+        this.state = Reason.cancel;
+        this.stop(this.state);
+        this.initGame();
+      } else {
+        this.start();
+      }
+    });
   }
 
   setGameStopListner(onGameStop) {
@@ -68,10 +74,14 @@ class Game {
   start() {
     this.started = true;
     sound.PlayBackground();
-    this.initGame();
     this.showStopButton();
     this.showTimerAndScore();
     this.startGameTimer();
+    if (this.state === Reason.win) {
+      this.gameLevelUp();
+    } else {
+      this.initGame();
+    }
   }
 
   stop(reason) {
@@ -90,10 +100,20 @@ class Game {
       this.score++;
       this.updateScoreBoard();
       if (this.score === this.carrotCount) {
-        this.stop(Reason.win);
+        if (this.gameLevel === 10) {
+          this.state = Reason.clear;
+          this.gameClear(this.state);
+          return;
+        }
+        this.state = Reason.win;
+        this.stop(this.state);
+        this.gameLevel++;
       }
     } else if (item === "bug") {
-      this.stop(Reason.lose);
+      this.state = Reason.lose;
+      this.stop(this.state);
+      this.gameLevel = 0;
+      this.initGame();
     }
   };
 
@@ -147,7 +167,29 @@ class Game {
   // 게임 초기화
   initGame() {
     this.score = 0;
+    this.gameLevel = 0;
+    this.carrotCount = 10;
+    this.bugCount = 10;
+    this.gameDuration = 10;
     this.gameScore.innerText = this.carrotCount;
+    this.updateTimeText(this.gameDuration);
     this.gameField.init();
+  }
+
+  // 게임 레벨 업
+  gameLevelUp() {
+    this.carrotCount += 1;
+    this.bugCount += 1;
+    this.score = 0;
+    this.gameScore.innerText = this.carrotCount;
+    this.gameField.levelUp(this.carrotCount, this.bugCount);
+    if (this.gameLevel === 2) {
+      this.gameDuration += 5;
+    }
+  }
+
+  // 게임 클리어
+  gameClear(reason) {
+    this.stop(reason);
   }
 }

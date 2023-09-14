@@ -21,13 +21,23 @@ export class Field {
     this.onItemClick = onItemClick;
   }
 
-  // _함수명은 외부에서 참조하지 못하게 하는 표시
   init() {
     this.field.innerHTML = "";
+    this.carrotCount = 10;
+    this.bugCount = 10;
     this._addItem("carrot", this.carrotCount, "img/carrot.png");
     this._addItem("bug", this.bugCount, "img/bug.png");
   }
 
+  levelUp(UpdateCarrotCount, UpdateBugCount) {
+    this.field.innerHTML = "";
+    this.carrotCount = UpdateCarrotCount;
+    this.bugCount = UpdateBugCount;
+    this._addItem("carrot", this.carrotCount, "img/carrot.png");
+    this._addItem("bug", this.bugCount, "img/bug.png");
+  }
+
+  // _함수명은 외부에서 참조하지 못하게 하는 표시
   _addItem(className, count, imgPath) {
     const x1 = 0;
     const y1 = 0;

@@ -12,13 +12,27 @@ export default class PopUp {
     });
   }
 
-  setClcikListener(onclick) {
+  setClickListener(onclick) {
     this.onclick = onclick;
   }
 
   showWithText(text) {
     this.popUpText.innerText = text;
     this.popUp.classList.remove("pop-up--hide");
+  }
+
+  showButton(reason) {
+    if (reason === "win") {
+      this.popUpRefresh.innerHTML = `
+        <i class="fa-solid fa-play"></i>
+      `;
+    } else if (reason === "clear") {
+      this.popUpRefresh.remove();
+    } else {
+      this.popUpRefresh.innerHTML = `
+        <i class="fa-solid fa-rotate-right"></i>
+      `;
+    }
   }
 
   hide() {
