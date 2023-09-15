@@ -8,6 +8,9 @@ Mini Game that you win if you catch a rabbit to avoid bugs.
 * Click the bug or stop game button to restart from step 1
 * If you break all 10 levels, YOU WIN!
 
+## 📌 key Functions 
+* Rabbits and bugs are randomly located!
+* Each time a game is leveled up, the number of rabbits and bugs and game time increase appropriately to match the game's difficulty.
 
 
 
