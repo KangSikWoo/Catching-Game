@@ -11,6 +11,7 @@ Mini Game that you win if you catch a rabbit to avoid bugs.
 ## 📌 key Functions 
 * Rabbits and bugs are randomly located!
 * Each time a game is leveled up, the number of rabbits and bugs and game time increase appropriately to match the game's difficulty.
+* Show a different banner for each situation!
 
 
 
